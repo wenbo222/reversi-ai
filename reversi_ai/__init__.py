@@ -11,7 +11,7 @@ def get_data_path():
     cache_dir=Path(os.path.expanduser("~"))/".reversi_ai"
     cache_dir.mkdir(parents=True, exist_ok=True)
 
-    version="v0.1.1"
+    version="v0.1.2"
     dest_path=cache_dir/f"reversi_ai_{version}.dat"
     if not dest_path.exists():
         url=f"https://github.com/wenbo222/reversi-ai/releases/download/{version}/reversi_ai.dat"

@@ -317,7 +317,7 @@ static uint64_t compute_hash(int board[8][8], int player)
 }
 
 // Binary file I/O
-// Header:  "RVSAI\0" (6 bytes) + version uint8 (1 byte)
+// Header:  "RVSAI\0" (6 bytes) + FileVersion (12 bytes)
 // Zobrist: g_zob_b[64] + g_zob_w[64] + player_b + player_w (1040 bytes)
 // TT:      count uint32, then for each entry:
 //          key uint64, eval double, flag char, 
@@ -329,7 +329,7 @@ struct FileVersion
     int minor;
     int patch;
 };
-static const FileVersion FILE_VERSION={0, 1, 0}; // Semantic versioning: 0.1.0
+static const FileVersion FILE_VERSION={0, 1, 2}; // Semantic versioning: 0.1.2
 
 static bool load_bin(const string& path)
 {
