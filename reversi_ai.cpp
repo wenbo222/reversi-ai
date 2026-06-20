@@ -131,6 +131,7 @@ static double evaluate(int board[8][8], int player)
             score_w+=SCORES[r][c]; 
         }
     }
+    int score_adv=score_b-score_w;
     int num_adv=num_b-num_w;
     int mob_b=legal_moves_count(board, B), mob_w=legal_moves_count(board, W);
     
@@ -141,8 +142,16 @@ static double evaluate(int board[8][8], int player)
         return 0.0;
     }
     int mob_adv=mob_b-mob_w;
+    
+    // Calculate relative weights of scores dependent on game stage
     double total=(double)(num_b+num_w);
-    return (double)(score_b-score_w)+(double)num_adv*total*total/1000.0+(double)mob_adv;
+    double t=(total-4.0)/60.0;
+    if(t<0.0) t=0.0;
+    if(t>1.0) t=1.0;
+    double w_score=10.0-9.0*t;
+    double w_num=-2.0+17.0*t*t;
+    double w_mob=15.0-13.0*t;
+    return (double)score_adv*w_score+(double)num_adv*w_num+(double)mob_adv*w_mob;
 }
 
 // Plays the move if legal while returning PlayResult.
@@ -314,7 +323,13 @@ static uint64_t compute_hash(int board[8][8], int player)
 //          key uint64, eval double, flag char, 
 //          depth int32, mc int32, mc x (col int32, row int32)
 static const char FILE_MAGIC[]="RVSAI"; // File signature of reversi AI
-static const uint8_t FILE_VERSION=1; // Simple schematic versioning of 1
+struct FileVersion 
+{
+    int major;
+    int minor;
+    int patch;
+};
+static const FileVersion FILE_VERSION={0, 1, 0}; // Semantic versioning: 0.1.0
 
 static bool load_bin(const string& path)
 {
@@ -323,9 +338,9 @@ static bool load_bin(const string& path)
     char magic[6]={};
     if(!f.read(magic, 6)) return false;
     if(string(magic, 5)!=string(FILE_MAGIC, 5)) return false;
-    uint8_t ver;
-    if(!f.read((char*)&ver, 1)) return false;
-    if(ver!=FILE_VERSION) return false;
+    FileVersion ver;
+    if(!f.read((char*)&ver, sizeof(FileVersion))) return false;
+    if(ver.major!=FILE_VERSION.major||ver.minor!=FILE_VERSION.minor||ver.patch!=FILE_VERSION.patch) return false;
     
     // Read Zobrist hashes
     if(!f.read((char*)g_zob_b, 512)) return false;
@@ -372,7 +387,7 @@ static void save_bin(const string& path)
     ofstream f(path, ios::binary);
     if(!f) return;
     f.write(FILE_MAGIC, 6);
-    f.write((char*)&FILE_VERSION, 1);
+    f.write((char*)&FILE_VERSION, sizeof(FileVersion));
     f.write((char*)g_zob_b, 512);
     f.write((char*)g_zob_w, 512);
     f.write((char*)&g_zob_player_b, 8);
