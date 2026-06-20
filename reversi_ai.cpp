@@ -329,7 +329,7 @@ struct FileVersion
     int minor;
     int patch;
 };
-static const FileVersion FILE_VERSION={0, 1, 2}; // Semantic versioning: 0.1.2
+static const FileVersion FILE_VERSION={0, 1, 3}; // Semantic versioning
 
 static bool load_bin(const string& path)
 {

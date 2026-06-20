@@ -12,7 +12,7 @@ ext_modules = [
 
 setup(
     name="reversi_ai",
-    version="0.1.2",
+    version="0.1.3",
     author="Wenbo Wang",
     author_email="wangwenbo205@gmail.com",
     description="An AI for a custom version of Reversi",

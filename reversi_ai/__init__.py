@@ -11,10 +11,10 @@ def get_data_path():
     cache_dir=Path(os.path.expanduser("~"))/".reversi_ai"
     cache_dir.mkdir(parents=True, exist_ok=True)
 
-    version="v0.1.2"
+    version="v0.1.3"
     dest_path=cache_dir/f"reversi_ai_{version}.dat"
     if not dest_path.exists():
-        url=f"https://github.com/wenbo222/reversi-ai/releases/download/{version}/reversi_ai.dat"
+        url=f"https://github.com/wenbo222/reversi-ai/releases/download/{version}/reversi_ai_{version}.dat"
         urlretrieve(url, dest_path)
         print(f"reversi_ai.dat transposition table ({version}) downloaded without issues.")
         
