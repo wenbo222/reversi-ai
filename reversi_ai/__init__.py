@@ -11,9 +11,18 @@ def get_data_path():
     cache_dir=Path(os.path.expanduser("~"))/".reversi_ai"
     cache_dir.mkdir(parents=True, exist_ok=True)
 
-    dest_path=cache_dir/"reversi_ai.dat"
+    version="v0.1.0"
+    dest_path=cache_dir/f"reversi_ai_{version}.dat"
     if not dest_path.exists():
-        url="https://github.com/wenbo222/reversi-ai/releases/download/v0.0.0/reversi_ai.dat"
+        url=f"https://github.com/wenbo222/reversi-ai/releases/download/{version}/reversi_ai.dat"
         urlretrieve(url, dest_path)
-        print("reversi_ai.dat transposition table downloaded without issues.")
+        print(f"reversi_ai.dat transposition table ({version}) downloaded without issues.")
+        
+        # Clean up old data files to free up disk space
+        for old_file in cache_dir.glob("reversi_ai*.dat"):
+            if old_file!=dest_path:
+                try:
+                    old_file.unlink()
+                except:
+                    pass
     return str(dest_path)
