@@ -18,10 +18,6 @@ setup(
     description="An AI for a custom version of Reversi",
     url="https://github.com/wenbo222/reversi-ai",
     packages=find_packages(),
-    package_data={
-        "reversi_ai": ["reversi_ai.dat"],
-    },
-    include_package_data=True,
     ext_modules=ext_modules,
     cmdclass={"build_ext": build_ext},
     python_requires=">=3.10",
